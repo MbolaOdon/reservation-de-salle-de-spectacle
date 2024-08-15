@@ -14,6 +14,8 @@ import 'package:spectacle/widgets/common_search_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:spectacle/widgets/stylish_dropdown.dart';
+
 class ReservationScreen extends StatefulWidget {
   final AnimationController animationController;
   ReservationScreen({Key? key, required this.animationController}) : super(key: key);
@@ -26,6 +28,12 @@ class _ReservationScreenState extends State<ReservationScreen> with TickerProvid
   final myController = TextEditingController();
   List<ReservationModelClient> reservedata = [];
   bool isLoading = true;
+   String? selectedValue;
+  List<String> dropdownItems = [
+    'En attente',
+    'Validée',
+    
+  ];
 
   @override
   void initState() {
@@ -57,7 +65,7 @@ class _ReservationScreenState extends State<ReservationScreen> with TickerProvid
   }
 
   void fetchData() async {
-  String uri = "${Config.BaseApiUrl}/reservationController/getReservClient";
+  String uri = "${Config.BaseApiUrl}/reservationController/getReservProp";
   try {
     var response = await http.get(Uri.parse(uri));
     print("Response Status: ${response.statusCode}");
@@ -106,15 +114,32 @@ class _ReservationScreenState extends State<ReservationScreen> with TickerProvid
                       ? Center(child: CircularProgressIndicator())
                       : ListView(
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 30, bottom: 10),
-                              child: Text(
-                                AppLocalizations(context).of('All_room'),
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400
-                                )
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: 30, bottom: 10),
+                                  child: Text('Liste des réservations',
+                                    //AppLocalizations(context).of('All_room'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400
+                                    )
+                                  ),
+                                ),
+                                StylishDropdown(
+                                  width: 120,
+                                  height:30,
+                                  items: dropdownItems, selectedValue: selectedValue,
+                                  onChanged: (String? newValue) { 
+                                     setState(() {
+                                      selectedValue = newValue;
+                                    });
+                                   },
+                                  hintText: 'Trier',
+                                ),
+                              ],
                             ),
                             ...reservedata.map((salle) => ReservationItem(reservationModel: salle)),
                           ],

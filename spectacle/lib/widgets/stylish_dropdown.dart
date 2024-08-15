@@ -7,6 +7,8 @@ class StylishDropdown extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String hintText;
+  final double? width;
+  final double? height;
 
   const StylishDropdown({
     Key? key,
@@ -14,6 +16,8 @@ class StylishDropdown extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.hintText = 'Sélectionnez une option',
+    this.width,
+    this.height,
   }) : super(key: key);
 
   @override
@@ -41,8 +45,8 @@ class StylishDropdown extends StatelessWidget {
         value: selectedValue,
         onChanged: onChanged,
         buttonStyleData: ButtonStyleData(
-              height: 50,
-              //width: 160,
+              height: height,
+              width: width,
               padding: const EdgeInsets.only(left: 14, right: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),

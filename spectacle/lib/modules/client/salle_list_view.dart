@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spectacle/config/config.dart';
 import 'package:spectacle/languages/appLocalizations.dart';
 import 'package:spectacle/models/salle_list_data.dart';
 import 'package:spectacle/models/salle_model.dart';
@@ -56,8 +57,28 @@ class SalleListView extends StatelessWidget {
                     Column(
                       children: [
                         AspectRatio(aspectRatio: 2,
-                        child: Image.asset(salleListData.design,
-                        fit: BoxFit.cover),
+                        child: Image.network(
+                              '${Config.BaseApiUrl}public/uploads/salles/${salleListData.design}',
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.error);
+                              },
+                            )
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

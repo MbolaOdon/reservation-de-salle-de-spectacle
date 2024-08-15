@@ -55,7 +55,7 @@ class ReservationModelClient{
   final int? nbrPlace;
   final DateTime? dateDebut;
   final DateTime? dateFin;
-  final String? validation;
+  final int? validation;
   final int? idSalle;
   final int? idCli;
   final String? nomPrenom;
@@ -82,24 +82,23 @@ class ReservationModelClient{
    
 
   });
-
-  factory ReservationModelClient.fromJson(Map<String, dynamic> json) {
-    return ReservationModelClient(
-      idReserv: json['idReserv'],
-      titre: json['titre'],
-      subTitre: json['subTitre'],
-      nomPrenom: json['nomPrenom'],
-      phone: json['phone'],
-      idSalle: json['idSalle'],
-      validation: json['validation'],
-      dateFin: json['dateFin'] ,
-      dateDebut: json['dateDebut'],
-      nbrPlace: json['nbrPlace'],
-      idCli: json['idCli'],
-      design: json['design'],
-      email: json['email'],
-    );
-  }
+factory ReservationModelClient.fromJson(Map<String, dynamic> json) {
+  return ReservationModelClient(
+    idReserv: json['idReserv'] is String ? int.parse(json['idReserv']) : json['idReserv'],
+    titre: json['titre'],
+    subTitre: json['subTitre'],
+    nomPrenom: json['nomPrenom'],
+    phone: json['phone'],
+    idSalle: json['idSalle'] is String ? int.parse(json['idSalle']) : json['idSalle'],
+    validation: json['validation'] is String ? int.parse(json['validation']) : json['validation'],
+    dateFin: json['dateFin'] is String ? DateTime.parse(json['dateFin']) : json['dateFin'],
+    dateDebut: json['dateDebut'] is String ? DateTime.parse(json['dateDebut']) : json['dateDebut'],
+    nbrPlace: json['nbrPlace'] is String ? int.parse(json['nbrPlace']) : json['nbrPlace'],
+    idCli: json['idCli'] is String ? int.parse(json['idCli']) : json['idCli'],
+    design: json['design'],
+    email: json['email'],
+  );
+}
   static List<ReservationModelClient> reservationList = [];
 
   Map<String, dynamic> toJson() {
@@ -130,7 +129,7 @@ class ReservationClient{
   final int? nbrPlace;
   final DateTime? dateDebut;
   final DateTime? dateFin;
-  final String? validation;
+  final int? validation;
   final int? idSalle;
   final int? idCli;
   final String? nomPrenom;
@@ -139,7 +138,7 @@ class ReservationClient{
   final String? email;
   final String? subTitre;
   final String? titre;
-  final int? prix;
+  final double? prix;
 
    ReservationClient({
      this.idReserv,
@@ -160,24 +159,24 @@ class ReservationClient{
 
   });
 
-  factory ReservationClient.fromJson(Map<String, dynamic> json) {
-    return ReservationClient(
-      idReserv: json['idReserv'],
-      titre: json['titre'],
-      subTitre: json['subTitre'],
-      nomPrenom: json['nomPrenom'],
-      phone: json['phone'],
-      idSalle: json['idSalle'],
-      validation: json['validation'],
-      dateFin: json['dateFin'] ,
-      dateDebut: json['dateDebut'],
-      nbrPlace: json['nbrPlace'],
-      idCli: json['idCli'],
-      design: json['design'],
-      email: json['email'],
-      prix: json['prix'],
-    );
-  }
+ factory ReservationClient.fromJson(Map<String, dynamic> json) {
+  return ReservationClient(
+    idReserv: json['idReserv'] is String ? int.parse(json['idReserv']) : json['idReserv'],
+    titre: json['titre'],
+    subTitre: json['subTitre'],
+    nomPrenom: json['nomPrenom'],
+    phone: json['phone'],
+    idSalle: json['idSalle'] is String ? int.parse(json['idSalle']) : json['idSalle'],
+    validation: json['validation'] is String ? int.parse(json['validation']) : json['validation'],
+    dateFin: json['dateFin'] is String ? DateTime.parse(json['dateFin']) : json['dateFin'],
+    dateDebut: json['dateDebut'] is String ? DateTime.parse(json['dateDebut']) : json['dateDebut'],
+    nbrPlace: json['nbrPlace'] is String ? int.parse(json['nbrPlace']) : json['nbrPlace'],
+    idCli: json['idCli'] is String ? int.parse(json['idCli']) : json['idCli'],
+    design: json['design'],
+    email: json['email'],
+    prix: json['prix'] is String ? double.parse(json['prix']) : (json['prix'] as num).toDouble(),
+  );
+}
   static List<ReservationClient> reservationList = [];
 
   Map<String, dynamic> toJson() {

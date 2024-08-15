@@ -70,6 +70,34 @@ class ReservationService {
       return 0;
     }
   }
+  Future<bool> validate(int idReserv) async {
+    try{
+       
+
+      final response = await http.put(
+        Uri.parse('${Config.BaseApiUrl}/reservationController/validate/$idReserv'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return true;
+      } else if (response.statusCode == 400) {
+        print(response.body);
+        return false;
+      } else {
+        print(response.body);
+       
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
+  }
 
   Future<List<ReservationModel>?> getListReservation() async {
     try {

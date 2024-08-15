@@ -14,6 +14,7 @@ import 'package:spectacle/utils/enum.dart';
 import 'package:provider/provider.dart';
 import 'package:spectacle/utils/helper.dart';
 import 'package:spectacle/utils/text_styles.dart';
+import 'package:spectacle/utils/themes.dart';
 import 'package:spectacle/widgets/common_button.dart';
 //import 'package:date_range_picker/date_range_picker.dart' as date_range_picker;
 
@@ -34,14 +35,14 @@ class SalleBookingView extends StatefulWidget {
 }
 
 class _SalleBookingViewState extends State<SalleBookingView> {
- var pageController = PageController(initialPage: 0);
+  var pageController = PageController(initialPage: 0);
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 365));
   // LanguageType _languageType = applicationcontext == null
   //     ? LanguageType.en
   //     : applicationcontext!.read().languageType;
   DateTime _startDate = DateTime.now();
-  DateTime _endDate =DateTime.now().add(Duration(days: 365));
+  DateTime _endDate = DateTime.now().add(Duration(days: 365));
   late ReservationService reservService;
   bool disableReserv = true;
 
@@ -57,19 +58,20 @@ class _SalleBookingViewState extends State<SalleBookingView> {
   Future<void> handleReservation() async {
     print(_startDate);
     print(_endDate);
-    
+
     if (await reservService.addReservation(
         widget.salleData.idSalle, _startDate, _endDate)) {
-       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reservation tenu en compte\n Veillez patientez pendant\n la validation')),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Reservation tenu en compte\n Veillez patientez pendant\n la validation')),
       );
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-   List<String> images = widget.salleData.design.split('/');
+    List<String> images = widget.salleData.design.split('/');
     return AnimatedBuilder(
       animation: widget.animationController,
       builder: (BuildContext context, Widget? child) {
@@ -92,22 +94,27 @@ class _SalleBookingViewState extends State<SalleBookingView> {
                         children: <Widget>[
                           for (var image in images)
                             Image.network(
-                  '${Config.BaseApiUrl}public/uploads/salles/${widget.salleData.design}',
-                  fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.error);
-                  },
-                )
+                              '${Config.BaseApiUrl}public/uploads/salles/${widget.salleData.design}',
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.error);
+                              },
+                            )
                         ],
                       ),
                     ),
@@ -141,11 +148,10 @@ class _SalleBookingViewState extends State<SalleBookingView> {
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
-                                .copyWith(fontSize: 24),
+                                .copyWith(fontSize: 18),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(child: SizedBox()),
-                          
                         ],
                       ),
                       Row(
@@ -156,11 +162,12 @@ class _SalleBookingViewState extends State<SalleBookingView> {
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
-                                .copyWith(fontSize: 22),
+                                .copyWith(fontSize: 16),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 0),
-                            child: Text( "place",
+                            child: Text(
+                              " place",
                               //AppLocalizations(context).of("per_night"),
                               style: TextStyles(context)
                                   .getRegularStyle()
@@ -170,28 +177,27 @@ class _SalleBookingViewState extends State<SalleBookingView> {
                         ],
                       ),
                       Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (_startDate != null && _endDate != null)
-                              Text(
-                                'Selectionner deux date: ${DateFormat('yyyy-MM-dd').format(_startDate!)} - ${DateFormat('yyyy-MM-dd').format(_endDate!)}',
-                                style: TextStyle(fontSize:12)
-                              ),
-                            ElevatedButton(
-                              onPressed: _showDateRangePicker,
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
-                              ),
-                              child: Text('Quand vous souhaitez reserver'),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (_startDate != null && _endDate != null)
+                            Text(
+                                'Reservée de: ${DateFormat('d MMMM yyyy').format(_startDate!)} à ${DateFormat('d MMMM yyyy').format(_endDate!)}',
+                                style: TextStyle(fontSize: 14)),
+                            SizedBox(height: 10,),
+                          ElevatedButton(
+                            onPressed: _showDateRangePicker,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor:AppTheme.primaryColor
                             ),
-                          ],
-                        ),
+                            child: Text('Quand vous souhaitez reserver'),
+                          ),
+                        ],
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          
                           InkWell(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(4.0)),
@@ -203,7 +209,8 @@ class _SalleBookingViewState extends State<SalleBookingView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Text("Plus details",
+                                  Text(
+                                    "Plus details",
                                     // AppLocalizations(context)
                                     //     .of("more_details"),
                                     style: TextStyles(context).getBoldStyle(),
@@ -255,7 +262,7 @@ class _SalleBookingViewState extends State<SalleBookingView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Selectionner',
+                'Appuiée sur les dates',
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -265,8 +272,8 @@ class _SalleBookingViewState extends State<SalleBookingView> {
               DateRangePicker(
                 initialStartDate: _startDate,
                 initialEndDate: _endDate,
-                primaryColor: Colors.blue,
-                accentColor: Colors.blue,
+                primaryColor: AppTheme.primaryColor,
+                accentColor: AppTheme.primaryColor,
                 onDateRangeChanged: (DateTimeRange dateRange) {
                   setState(() {
                     _startDate = dateRange.start;
@@ -276,28 +283,26 @@ class _SalleBookingViewState extends State<SalleBookingView> {
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {
-                  
-                  Navigator.of(context).pop(DateTimeRange(
-                    start: _startDate!,
-                    end: _endDate!,
-                    
-                  ));
-                  handleReservation();
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                ),
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                Text('Envoyer'),
-                SizedBox(width:50),
-                Icon(Icons.send),
-                ],
-                )
-              ),
+                  onPressed: () {
+                    Navigator.of(context).pop(DateTimeRange(
+                      start: _startDate!,
+                      end: _endDate!,
+                    ));
+                    handleReservation();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppTheme.primaryColor,
+                    maximumSize: Size.fromWidth(150),
+                    elevation:2
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text('Envoyer'),
+                      Icon(Icons.send),
+                    ],
+                  )),
             ],
           ),
         ),

@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _indexView = Container();
   final SecureStorage secureStorage = SecureStorage();
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
- // Map<String, dynamic>? retrievedData = await secureStorage.getJsonData('user_data');
+ 
 
   @override
   void initState() {
@@ -158,6 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _indexView = HomeExplorerScreen(
               animationController: _animationController,
             );
+            _animationController.forward();
           });
         } else if (tabType == BottomBarType.Trips) {
          _loadUserSpecificScreen();
@@ -168,12 +169,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _indexView = ProfileScreen(
               animationController: _animationController,
             );
+            _animationController.forward();
           });
         } else if (tabType == BottomBarType.Reservation) {
           setState(() {
             _indexView = ReservationScreen(
               animationController: _animationController,
             );
+            _animationController.forward();
           });
         }
       });
@@ -194,54 +197,67 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
   Widget getBottomBarUI(BottomBarType tabType) {
-    return CommonCard(
-      color: AppTheme.backgroundColor,
-      radius: 0,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              TabButtonUI(
-                icon: Icons.home,
-                isSelected: tabType == BottomBarType.Explore,
-                text: AppLocalizations(context).of("explore"),
-                onTap: () {
-                  tabClick(BottomBarType.Explore);
-                },
-              ),
-              TabButtonUI(
-                icon: FontAwesomeIcons.building,
-                isSelected: tabType == BottomBarType.Trips,
-                text: "Salle",//AppLocalizations(context).of("room_text"),
-                onTap: () {
-                  tabClick(BottomBarType.Trips);
-                },
-              ),
-              TabButtonUI(
-                icon: FontAwesomeIcons.registered,
-                isSelected: tabType == BottomBarType.Reservation,
-                text: "Reservation",//AppLocalizations(context).of("reservation"),
-                onTap: () {
-                  tabClick(BottomBarType.Reservation);
-                },
-              ),
-              TabButtonUI(
-                icon: FontAwesomeIcons.user,
-                isSelected: tabType == BottomBarType.Profile,
-                text: AppLocalizations(context).of("profile"),
-                onTap: () {
-                  tabClick(BottomBarType.Profile);
-                },
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).padding.bottom,
-          )
-        ],
-      ),
-    );
-  }
+  return FutureBuilder<Map<String, dynamic>?>(
+    future: secureStorage.getJsonData('user_data'),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      }
+      
+      final retrievedData = snapshot.data;
+      final bool isProp = retrievedData != null && retrievedData['role'] == "prop";
+
+      return CommonCard(
+        color: AppTheme.backgroundColor,
+        radius: 0,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                TabButtonUI(
+                  icon: Icons.home,
+                  isSelected: tabType == BottomBarType.Explore,
+                  text: AppLocalizations(context).of("explore"),
+                  onTap: () {
+                    tabClick(BottomBarType.Explore);
+                  },
+                ),
+                if (isProp)
+                  TabButtonUI(
+                    icon: FontAwesomeIcons.building,
+                    isSelected: tabType == BottomBarType.Trips,
+                    text: "Salle",
+                    onTap: () {
+                      tabClick(BottomBarType.Trips);
+                    },
+                  ),
+                TabButtonUI(
+                  icon: FontAwesomeIcons.registered,
+                  isSelected: tabType == BottomBarType.Reservation,
+                  text: "Reservation",
+                  onTap: () {
+                    tabClick(BottomBarType.Reservation);
+                  },
+                ),
+                TabButtonUI(
+                  icon: FontAwesomeIcons.user,
+                  isSelected: tabType == BottomBarType.Profile,
+                  text: AppLocalizations(context).of("profile"),
+                  onTap: () {
+                    tabClick(BottomBarType.Profile);
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
 }
 
 

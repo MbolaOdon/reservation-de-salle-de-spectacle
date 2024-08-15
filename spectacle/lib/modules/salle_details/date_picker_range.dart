@@ -41,7 +41,7 @@ class _DateRangePickerState extends State<DateRangePicker> {
             Expanded(
               child: _DatePicker(
                 initialDate: _startDate,
-                label: 'Start Date',
+                label: 'De',
                 primaryColor: widget.primaryColor,
                 accentColor: widget.accentColor,
                 onDateChanged: (date) {
@@ -58,7 +58,7 @@ class _DateRangePickerState extends State<DateRangePicker> {
             Expanded(
               child: _DatePicker(
                 initialDate: _endDate,
-                label: 'End Date',
+                label: 'A',
                 primaryColor: widget.primaryColor,
                 accentColor: widget.accentColor,
                 onDateChanged: (date) {
@@ -145,22 +145,22 @@ class __DatePickerState extends State<_DatePicker> {
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               widget.label,
               style: TextStyle(
                 color: Colors.grey[600],
-                fontSize: 16.0,
+                fontSize: 14.0,
               ),
             ),
             if (_date != null)
               Text(
-                DateFormat('yyyy-MM-dd').format(_date!),
+                DateFormat('dd-MM-yyyy').format(_date!),
                 style: TextStyle(
                   color: Colors.grey[800],
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
               ),
           ],
